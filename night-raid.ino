@@ -59,11 +59,15 @@ const uint8_t PROGMEM planeBitmap1[] = {0x01, 0x00, 0x06, 0x40, 0x7F, 0xC0, 0xFF
 0x80, 0x0E, 0x00, 0x03, 0x00, 0x00, 0x80, 
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 0x00};
-
 const uint8_t PROGMEM planeBitmap0[] = {0x20, 0x00, 0x98, 0x00, 0xFF, 0x80, 0x7F, 
 0xC0, 0x1C, 0x00, 0x30, 0x00, 0x40, 0x00, 
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 0x00};
+const uint8_t PROGMEM cityRubble[] = {0x10, 0x10, 0x3A, 0xDC, 0x3F, 0xFC};
+const uint8_t PROGMEM turretRubble[] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+0x00, 0x00, 0x0C, 0x30, 0x1F, 0xF8, 0x3F, 0xFC};
+const uint8_t PROGMEM turret[] = {0x00, 0x00, 0x00, 0x00, 0x02, 0x40, 0x03, 0xC0, 
+0x07, 0xE0, 0x0F, 0xF0, 0x1F, 0xF8, 0x3F, 0xFC};
 
 Arduboy arduboy;
 byte gameState = MENU;
@@ -396,6 +400,11 @@ void updateMissiles(){
 void drawMissiles(){
   for (int i = 0; i < MAX_MISSILES; i++){
     if (incomingMissiles[i].valid == true){
+      if ((incomingMissiles[i].incoming == false) && (incomingMissiles[i].explosionFrame == 0)){
+        arduboy.drawLine(incomingMissiles[i].stopX - 1, incomingMissiles[i].stopY - 1, incomingMissiles[i].stopX + 1, incomingMissiles[i].stopY + 1, WHITE);
+        arduboy.drawLine(incomingMissiles[i].stopX - 1, incomingMissiles[i].stopY + 1, incomingMissiles[i].stopX + 1, incomingMissiles[i].stopY - 1, WHITE);
+      }
+      
       if ((incomingMissiles[i].explosionFrame == 0) && (incomingMissiles[i].scored == false)){
         arduboy.drawLine(incomingMissiles[i].startX, incomingMissiles[i].startY, incomingMissiles[i].currentX, incomingMissiles[i].currentY, WHITE);
         if (incomingMissiles[i].incoming == true) {
@@ -528,11 +537,9 @@ void drawCities(){
     } else if (targets[i] == true){
       if ((flashIndex[1] == i) && (flashCounter[1] > 0)){
         if (((flashCounter[1] / 4) % 2) == 0){
-          arduboy.drawLine((i+1)*16 - 2, 64, i*16 + 8, 58, secondColor);
-          arduboy.fillTriangle(i*16, 64, i*16 + 7, 58, (i+1)*16 - 3, 64, secondColor);
+          arduboy.drawSlowXYBitmap(i*16, 56, turret, 16, 8, BLACK);
         } else {
-          arduboy.drawLine((i+1)*16 - 2, 64, i*16 + 8, 58, mainColor);
-          arduboy.fillTriangle(i*16, 64, i*16 + 7, 58, (i+1)*16 - 3, 64, mainColor);
+          arduboy.drawSlowXYBitmap(i*16, 56, turret, 16, 8, WHITE);
         }
 
         if (flashCounter[1] < 255){
@@ -542,9 +549,12 @@ void drawCities(){
           flashIndex[1] = 255;
         }
       } else {
-        arduboy.drawLine((i+1)*16 - 2, 64, i*16 + 8, 58, mainColor);
-        arduboy.fillTriangle(i*16, 64, i*16 + 7, 58, (i+1)*16 - 3, 64, mainColor);
+        arduboy.drawSlowXYBitmap(i*16, 56, turret, 16, 8, WHITE);
       }
+    } else if ((i != 1) && (i != 6)){
+      arduboy.drawSlowXYBitmap(i*16, 61, cityRubble, 16, 8, WHITE);
+    } else {
+      arduboy.drawSlowXYBitmap(i*16, 56, turretRubble, 16, 8, WHITE);
     }
   }
   arduboy.drawLine(0, 63, 127, 63, WHITE);
