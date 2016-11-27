@@ -26,6 +26,7 @@ Missile Command Clone
 #define MENU 0
 #define PLAYING 1
 #define GAMEOVER 2
+#define PAUSED 3
 
 struct Missile {
   public:
@@ -151,6 +152,9 @@ void updateState(){
       updateMissiles();
       updatePlane();
       break;
+    case PAUSED:
+      pauseHandler();
+      break;
   }
 }
 
@@ -176,12 +180,27 @@ void drawState(){
       drawPlane();
       drawScore();
       break;
+    case PAUSED:
+      drawMissiles();
+      drawCities();
+      drawPlane();
+      // drawCursor();
+      drawScore();
+      drawPaused();
+      break;
   }
   arduboy.display();
 }
 
 ///////////////////////////////////////
 void updateCursor(){
+  if (arduboy.pressed(LEFT_BUTTON)
+      && arduboy.pressed(RIGHT_BUTTON)
+      && arduboy.pressed(UP_BUTTON)
+      && arduboy.pressed(DOWN_BUTTON)){
+      gameState = PAUSED;     
+   }
+  
   // TODO cursor acceleration?
   if (arduboy.pressed(LEFT_BUTTON) && cursorX > 0){
     cursorX = cursorX - CURSOR_MOVE_SPEED;
@@ -554,7 +573,8 @@ void drawCities(){
     } else if ((i != 1) && (i != 6)){
       arduboy.drawSlowXYBitmap(i*16, 61, cityRubble, 16, 8, WHITE);
     } else {
-      arduboy.drawSlowXYBitmap(i*16, 56, turretRubble, 16, 8, WHITE);
+      // arduboy.drawSlowXYBitmap(i*16, 56, turretRubble, 16, 8, WHITE);
+      arduboy.drawSlowXYBitmap(i*16, 61, cityRubble, 16, 8, WHITE);
     }
   }
   arduboy.drawLine(0, 63, 127, 63, WHITE);
@@ -787,6 +807,12 @@ void drawGameover(){
   arduboy.print(F("THE END"));
 }
 
+void drawPaused(){
+  arduboy.setCursor(29,21);
+  arduboy.setTextSize(2);
+  arduboy.print(F("PAUSED"));
+}
+
 void gameoverHandler(){
   if (arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON)){
     gameState = MENU;
@@ -824,6 +850,14 @@ void checkForLoss(){
   if (lossCounter >= 240){
     updateHighscore();
     gameState = GAMEOVER;
+  }
+}
+
+void pauseHandler(){
+  if (arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON)){
+    bFired = true;
+    aFired = true;
+    gameState = PLAYING;
   }
 }
 
