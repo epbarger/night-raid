@@ -64,7 +64,6 @@ const uint8_t PROGMEM planeBitmap0[] = {0x20, 0x00, 0x98, 0x00, 0xFF, 0x80, 0x7F
 0xC0, 0x1C, 0x00, 0x30, 0x00, 0x40, 0x00, 
 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
 0x00};
-const uint8_t PROGMEM cityRubble[] = {0x10, 0x10, 0x3A, 0xDC, 0x3F, 0xFC};
 const uint8_t PROGMEM turret[] = {0x00, 0x00, 0x00, 0x00, 0x02, 0x40, 0x03, 0xC0, 
 0x07, 0xE0, 0x0F, 0xF0, 0x1F, 0xF8, 0x3F, 0xFC};
 
@@ -196,7 +195,8 @@ void updateCursor(){
   if (arduboy.pressed(LEFT_BUTTON)
       && arduboy.pressed(RIGHT_BUTTON)
       && arduboy.pressed(UP_BUTTON)
-      && arduboy.pressed(DOWN_BUTTON)){
+      && arduboy.pressed(DOWN_BUTTON)
+      && !pendingLoss){
       gameState = PAUSED;     
    }
   
@@ -569,11 +569,7 @@ void drawCities(){
       } else {
         arduboy.drawSlowXYBitmap(i*16, 56, turret, 16, 8, WHITE);
       }
-    } else if ((i != 1) && (i != 6)){
-//      arduboy.drawSlowXYBitmap(i*16, 61, cityRubble, 16, 8, WHITE);
-      randomRubble(i);
     } else {
-//      arduboy.drawSlowXYBitmap(i*16, 61, cityRubble, 16, 8, WHITE);
       randomRubble(i);
     }
   }
