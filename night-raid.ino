@@ -74,6 +74,7 @@ byte menuIndex = 0;
 int highscore = 0;
 bool targets[8] = {1,1,1,1,1,1,1,1};
 int targetRubble[8] = {0,0,0,0,0,0,0,0};
+int targetRubbleSecondLayer[8] = {0,0,0,0,0,0,0,0};
 byte flashIndex[2] = {255, 255};
 byte flashCounter[2] = {0,0};
 byte targetXCoords[8] = {8, 24, 40, 56, 72, 88, 104, 120};
@@ -584,6 +585,10 @@ void randomRubble(byte targetPosition){
     if ((targetRubble[targetPosition] >> k) & 1){
       arduboy.drawPixel(targetPosition*16+k,62, WHITE); 
     }
+
+    if ((targetRubbleSecondLayer[targetPosition] >> k) & 1){
+      arduboy.drawPixel(targetPosition*16+k,61, WHITE); 
+    }
   }
 }
 
@@ -629,6 +634,7 @@ void initRandomness(){
   arduboy.initRandomSeed();
   for(int i=0;i<8;i++){
     targetRubble[i] = random(0, 65535);
+    targetRubbleSecondLayer[i] = random(0, 65535) & targetRubble[i];
   }
 }
 
