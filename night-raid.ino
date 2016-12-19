@@ -2,7 +2,7 @@
 Missile Command Clone
 */
 
-#include "Arduboy.h"
+#include <Arduboy2.h>
 
 #define CURSOR_MOVE_SPEED 1
 #define CURSOR_FLOOR 56
@@ -67,7 +67,7 @@ const uint8_t PROGMEM planeBitmap0[] = {0x20, 0x00, 0x98, 0x00, 0xFF, 0x80, 0x7F
 const uint8_t PROGMEM turret[] = {0x00, 0x00, 0x00, 0x00, 0x02, 0x40, 0x03, 0xC0, 
 0x07, 0xE0, 0x0F, 0xF0, 0x1F, 0xF8, 0x3F, 0xFC};
 
-Arduboy arduboy;
+Arduboy2 arduboy;
 byte gameState = MENU;
 byte menuIndex = 0;
 int highscore = 0;
@@ -182,7 +182,7 @@ void drawState(){
       drawMissiles();
       drawCities();
       drawPlane();
-      // drawCursor();
+//      drawCursor();
       drawScore();
       drawPaused();
       break;
