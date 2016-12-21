@@ -104,6 +104,7 @@ void setup() {
   if (eepromValid != 111){
     EEPROM.put(400, 111);
     EEPROM.put(420, 0);
+    EEPROM.put(421, 0);
   } else {
     EEPROM.get(420, highscore);
   }
