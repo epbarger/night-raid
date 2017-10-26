@@ -640,41 +640,11 @@ bool leftButtonMenuLock = false;
 void menuHandler(){
   if (arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON)){
     if (transitionLock == false){
-      switch(menuIndex){
-        case 0:
-          gameState = PLAYING;
-          initRandomness();
-          break;
-        case 1:
-          clearHighscore();
-          transitionLock = true;
-          break;
-      }
+      gameState = PLAYING;
+      initRandomness();
     }
   } else {
     transitionLock = false;
-  }
-
-  if (arduboy.pressed(RIGHT_BUTTON)){
-    if (!rightButtonMenuLock){
-      menuIndex = (menuIndex+1) % 2;
-      rightButtonMenuLock = true;
-    }
-  } else {
-    rightButtonMenuLock = false;
-  }
-
-  if (arduboy.pressed(LEFT_BUTTON)){
-    if (!leftButtonMenuLock){
-      if (menuIndex == 0){
-        menuIndex = 1;
-      } else {
-        menuIndex = (menuIndex-1) % 2;
-      }
-      leftButtonMenuLock = true;
-    }
-  } else {
-    leftButtonMenuLock = false;
   }
 }
 
@@ -748,26 +718,14 @@ void drawMenu(){
   arduboy.setTextSize(2);
   arduboy.print(F("NIGHT RAID"));
 
-  byte menuDrawOffset = 34;
+  byte menuDrawOffset = 29;
   
   if (menuIndex == 0 && arduboy.everyXFrames(2)){
-    arduboy.drawRect(menuDrawOffset,36,27,11,WHITE);
+    arduboy.drawRect(menuDrawOffset,36,69,11,WHITE);
   }
   arduboy.setTextSize(1);
   arduboy.setCursor(menuDrawOffset+2,38);
-  arduboy.print(F("PLAY"));
-
-  if (menuIndex == 1 && arduboy.everyXFrames(2)){
-    arduboy.drawRect(menuDrawOffset+29,36,33,11,WHITE);
-  }
-  arduboy.setCursor(menuDrawOffset+31,38);
-  arduboy.print(F("RESET"));
-
-//  if (menuIndex == 2 && arduboy.everyXFrames(2)){
-//    arduboy.drawRect(70,35,26,11,WHITE);
-//  }
-//  arduboy.setCursor(71,37);
-//  arduboy.print(F("INFO"));
+  arduboy.print(F("PRESS START"));
 }
 
 int calculateOutgoingExplosionRadiusFromFrame(byte frame){
