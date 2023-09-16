@@ -91,6 +91,7 @@ byte cursorX = 63;
 byte cursorY = 26;
 bool transitionLock = false;
 byte missileSpawnFrameDelay = MISSILE_FRAME_DELAY;
+bool pauseLock = false;
 
 ///////////////////////////////////////
 
@@ -193,12 +194,13 @@ void drawState(){
 
 ///////////////////////////////////////
 void updateCursor(){
-  if (arduboy.pressed(LEFT_BUTTON)
-      && arduboy.pressed(RIGHT_BUTTON)
+  if (arduboy.pressed(A_BUTTON)
+      && arduboy.pressed(B_BUTTON)
       && arduboy.pressed(UP_BUTTON)
-      && arduboy.pressed(DOWN_BUTTON)
       && !pendingLoss){
-      gameState = PAUSED;     
+      pauseLock = true;
+      gameState = PAUSED;
+      return;     
    }
   
   // TODO cursor acceleration?
@@ -830,7 +832,10 @@ void checkForLoss(){
 }
 
 void pauseHandler(){
-  if (arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON)){
+  if (pauseLock && !arduboy.pressed(A_BUTTON) && !arduboy.pressed(B_BUTTON)) {
+    pauseLock = false;
+  }
+  if (!pauseLock && (arduboy.pressed(A_BUTTON) || arduboy.pressed(B_BUTTON))){
     bFired = true;
     aFired = true;
     gameState = PLAYING;
